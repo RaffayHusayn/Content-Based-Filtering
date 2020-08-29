@@ -1,4 +1,3 @@
-
 from flask import Flask
 from flask import request
 from flask import jsonify
@@ -7,10 +6,7 @@ import numpy as np
 import json
 import pickle
 import pandas as pd
-
-
-#loading stuff here
-
+import requests
 
 
 app = Flask(__name__)
@@ -54,21 +50,60 @@ def index():
 
         #getting the userId from front-end
         message = request.get_json(force=True)
-        py_testuser = json.loads(message['user']) #makes a python variable of type string
-        int_testuser = int(py_testuser) #converts string into int
+        py_movieid = json.loads(message['movie']) #makes a python variable of type string
+        int_movieid = int(py_movieid) #converts string into int
 
-        #making predictions
+                #making predictions
+        indices_id_list = indices_id.tolist()
+        api_key = "0cc56911115acd5222ff0c526ef328f3"
+        language = "en-US"
+        page = 1
+        if int_movieid  not in indices_id_list:
+            print("not present, run tmdb api")
+            URL = f'https://api.themoviedb.org/3/movie/{int_movieid}/similar'
 
-        movie_list = get_recommendations_with_id(int_testuser).head(20) #this is pandas 1d array
+            PARAMS = {'api_key': api_key, 'language': language, 'page': page}
 
-        json_movie_list =movie_list.tolist() #this is python list
-        total = len(json_movie_list)
+            # sending get request and saving the response as response object
+            r = requests.get(url = URL, params = PARAMS)
 
-        response = {
-            'total' : total,
-            'movieId' : json_movie_list
-        }
-        return jsonify(response)
+            data =r.json()
+            movie_list = []
+            for movie in data['results']:
+                movie_list.append(int(movie['id']))
+
+            api_rec = movie_list[:20]
+            total = len(api_rec)
+            response = {
+                'total': total,
+                'movieId': api_rec
+            }
+            return jsonify(response)
+
+
+        else:
+            print("present, run normal api")
+            model_rec= get_recommendations_with_id(int_movieid).head(20)
+            model_rec_list = model_rec.tolist()
+            total = len(model_rec_list)
+            response = {
+                'total' : total,
+                'movieId' : model_rec_list
+            }
+            return jsonify(response)
+
+
+
+        # movie_list = get_recommendations_with_id(int_movieid).head(20) #this is pandas 1d array
+        #
+        # json_movie_list =movie_list.tolist() #this is python list
+        # total = len(json_movie_list)
+        #
+        # response = {
+        #     'total' : total,
+        #     'movieId' : json_movie_list
+        # }
+        # return jsonify(response)
 
 
 if __name__ == '__main__':
