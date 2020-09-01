@@ -1,6 +1,7 @@
 import pickle
 import pandas as pd
 import requests
+import emoji
 
 with open ("cosine_similarity_model", "rb") as f:
     cosine_sim= pickle.load(f)
@@ -66,3 +67,19 @@ else:
     print(model_rec_list)
 
 #print(type(get_recommendations("Good Will Hunting").head(20)))
+
+
+#take input to show recommendations, makes it easier to test but serves no purpose other than that.
+
+movie_name = None
+
+
+while movie_name != 'quit':
+    movie_name = input("Enter a movie name to show get similar movies: \n").title()
+    try:
+        recommendations = get_recommendations(movie_name).head(20)
+        print(recommendations)
+
+    except:
+        print(emoji.emojize("\n:upside-down_face:"))
+        print("----Oops! our model is not trained on this movie, try a different movie----")
