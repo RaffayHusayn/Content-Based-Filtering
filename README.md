@@ -1,0 +1,1 @@
+If you are interested in the deployment of the model to Google Cloud Platform's App Engine using Standard Environment, my Deployment Repo for this model(https://github.com/RaffayHusayn/Deployment-Content-Based-Filtering) will be more useful. 
