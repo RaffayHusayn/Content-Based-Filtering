@@ -74,7 +74,7 @@ else:
 movie_name = None
 
 
-while movie_name != 'quit':
+while movie_name != 'Quit':
     movie_name = input("Enter a movie name to show get similar movies: \n").title()
     try:
         recommendations = get_recommendations(movie_name).head(20)
