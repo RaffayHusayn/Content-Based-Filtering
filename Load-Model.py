@@ -39,7 +39,7 @@ indices_id_list = indices_id.tolist()
 
 #if model not trained on data, use Tmdb API to show results
 
-movie_id= 374720
+movie_id= 674
 api_key = "0cc56911115acd5222ff0c526ef328f3"
 language = "en-US"
 page = 1
@@ -58,13 +58,13 @@ if movie_id  not in indices_id_list:
         movie_list.append(int(movie['id']))
 
     api_rec = movie_list[:20]
-    print(api_rec)
+    # print(api_rec)
 
 else:
     print("present, run normal api")
     model_rec= get_recommendations_with_id(movie_id).head(20)
     model_rec_list = model_rec.tolist()
-    print(model_rec_list)
+    # print(model_rec_list)
 
 #print(type(get_recommendations("Good Will Hunting").head(20)))
 
@@ -83,3 +83,4 @@ while movie_name != 'Quit':
     except:
         print(emoji.emojize("\n:upside-down_face:"))
         print("----Oops! our model is not trained on this movie, try a different movie----")
+
